@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 460" role="img" aria-label="Ilustração de uma pessoa se preparando para entrevista e currículo profissional">
+  <defs>
+    <linearGradient id="hbg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#E0ECFF"/>
+      <stop offset="1" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <linearGradient id="hscreen" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#102A43"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="460" rx="24" fill="url(#hbg)"/>
+  <circle cx="500" cy="80" r="40" fill="#FACC15" opacity=".55"/>
+  <circle cx="80" cy="380" r="60" fill="#38BDF8" opacity=".25"/>
+  <!-- Desk -->
+  <rect x="80" y="330" width="440" height="14" rx="6" fill="#102A43" opacity=".15"/>
+  <!-- Laptop -->
+  <rect x="200" y="200" width="220" height="140" rx="10" fill="#102A43"/>
+  <rect x="212" y="212" width="196" height="116" rx="6" fill="url(#hscreen)"/>
+  <rect x="226" y="230" width="80" height="8" rx="3" fill="#38BDF8" opacity=".9"/>
+  <rect x="226" y="246" width="140" height="6" rx="3" fill="#FFFFFF" opacity=".5"/>
+  <rect x="226" y="260" width="110" height="6" rx="3" fill="#FFFFFF" opacity=".35"/>
+  <rect x="226" y="282" width="160" height="28" rx="6" fill="#16A34A" opacity=".85"/>
+  <rect x="170" y="340" width="280" height="10" rx="4" fill="#102A43" opacity=".35"/>
+  <!-- Person -->
+  <circle cx="150" cy="240" r="34" fill="#F2C29A"/>
+  <path d="M118 232 q32 -46 64 0 q-6 -28 -32 -28 q-26 0 -32 28z" fill="#102A43"/>
+  <path d="M100 360 q50 -90 100 0z" fill="#2563EB"/>
+  <rect x="138" y="278" width="24" height="38" rx="6" fill="#F2C29A"/>
+  <!-- Floating CV card -->
+  <g transform="translate(420 60)">
+    <rect width="130" height="160" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="28" cy="32" r="14" fill="#38BDF8"/>
+    <rect x="52" y="22" width="60" height="8" rx="3" fill="#102A43"/>
+    <rect x="52" y="36" width="40" height="6" rx="3" fill="#64748B"/>
+    <rect x="16" y="64" width="100" height="6" rx="3" fill="#E2E8F0"/>
+    <rect x="16" y="78" width="80" height="6" rx="3" fill="#E2E8F0"/>
+    <rect x="16" y="92" width="92" height="6" rx="3" fill="#E2E8F0"/>
+    <rect x="16" y="116" width="44" height="18" rx="9" fill="#E6EDFF"/>
+    <rect x="66" y="116" width="50" height="18" rx="9" fill="#E6EDFF"/>
+  </g>
+  <!-- Checklist -->
+  <g transform="translate(40 80)">
+    <rect width="110" height="120" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <g fill="#16A34A">
+      <circle cx="20" cy="28" r="8"/><circle cx="20" cy="56" r="8"/><circle cx="20" cy="84" r="8"/>
+    </g>
+    <path d="M16 28 l3 3 l6 -7 M16 56 l3 3 l6 -7 M16 84 l3 3 l6 -7" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="38" y="22" width="58" height="6" rx="3" fill="#102A43"/>
+    <rect x="38" y="50" width="48" height="6" rx="3" fill="#102A43"/>
+    <rect x="38" y="78" width="60" height="6" rx="3" fill="#102A43"/>
+  </g>
+  <!-- Progress chart -->
+  <g transform="translate(450 260)">
+    <rect width="120" height="80" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <polyline points="12,60 36,40 60,50 84,22 108,30" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#2563EB"><circle cx="12" cy="60" r="3"/><circle cx="36" cy="40" r="3"/><circle cx="60" cy="50" r="3"/><circle cx="84" cy="22" r="3"/><circle cx="108" cy="30" r="3"/></g>
+  </g>
+</svg>
