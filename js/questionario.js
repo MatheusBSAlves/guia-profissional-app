@@ -1,286 +1,340 @@
-/* Questionário de perfil — JavaScript Vanilla */
+/* Questionario interativo de preparo para entrevistas */
 (function () {
   "use strict";
 
-  /* Cada opção pontua um perfil:
-     C = Comunicador  | A = Analítico
-     L = Líder         | E = Executor */
-  var QUESTIONS = [
+  const QUESTIONS = [
     {
-      q: "Em uma reunião nova, você normalmente:",
+      prompt: "Antes de uma entrevista, voce pesquisa sobre a empresa e a vaga?",
       options: [
-        { t: "Quebra o gelo e puxa conversa", p: "C" },
-        { t: "Observa e analisa antes de falar", p: "A" },
-        { t: "Assume a condução da pauta", p: "L" },
-        { t: "Foca em decidir o próximo passo prático", p: "E" }
+        { text: "Quase nunca pesquiso antes da entrevista.", score: 0 },
+        { text: "Pesquiso pouco e de forma superficial.", score: 1 },
+        { text: "Pesquiso os pontos principais da empresa e da vaga.", score: 2 },
+        { text: "Pesquiso bem e preparo exemplos ligados a vaga.", score: 3 }
       ]
     },
     {
-      q: "Quando recebe uma tarefa nova, você:",
+      prompt: "Como voce costuma se apresentar quando o entrevistador pede para falar sobre voce?",
       options: [
-        { t: "Conversa com colegas para entender melhor", p: "C" },
-        { t: "Pesquisa e planeja antes de começar", p: "A" },
-        { t: "Divide com a equipe e delega partes", p: "L" },
-        { t: "Começa imediatamente e ajusta no caminho", p: "E" }
+        { text: "Improviso e fico sem saber por onde comecar.", score: 0 },
+        { text: "Falo um pouco, mas sem muita organizacao.", score: 1 },
+        { text: "Tenho uma apresentacao curta e razoavelmente clara.", score: 2 },
+        { text: "Tenho uma apresentacao objetiva, segura e treinada.", score: 3 }
       ]
     },
     {
-      q: "Sob pressão, sua reação típica é:",
+      prompt: "Quando pensa em responder perguntas sobre experiencias anteriores, voce:",
       options: [
-        { t: "Pedir ajuda e alinhar com o time", p: "C" },
-        { t: "Mapear riscos antes de agir", p: "A" },
-        { t: "Organizar todos e definir prioridades", p: "L" },
-        { t: "Colocar a mão na massa para resolver", p: "E" }
+        { text: "Nao preparo exemplos com antecedencia.", score: 0 },
+        { text: "Lembro de alguns exemplos, mas sem estrutura.", score: 1 },
+        { text: "Separo exemplos importantes para usar na conversa.", score: 2 },
+        { text: "Organizo exemplos com situacao, acao e resultado.", score: 3 }
       ]
     },
     {
-      q: "Você se sente mais confortável:",
+      prompt: "Seu nivel de seguranca para falar sobre qualidades e pontos a melhorar e:",
       options: [
-        { t: "Apresentando ideias para um grupo", p: "C" },
-        { t: "Estudando dados e construindo soluções", p: "A" },
-        { t: "Conduzindo projetos e pessoas", p: "L" },
-        { t: "Entregando resultados concretos", p: "E" }
+        { text: "Muito baixo, ainda me confundo nas respostas.", score: 0 },
+        { text: "Baixo, consigo responder mas com inseguranca.", score: 1 },
+        { text: "Bom, com algumas duvidas pontuais.", score: 2 },
+        { text: "Alto, consigo responder com clareza e naturalidade.", score: 3 }
       ]
     },
     {
-      q: "Ao receber feedback negativo, você:",
+      prompt: "Como voce cuida da sua comunicacao nao verbal em entrevistas?",
       options: [
-        { t: "Conversa para entender a perspectiva", p: "C" },
-        { t: "Analisa o que pode melhorar com calma", p: "A" },
-        { t: "Define um plano de ação claro", p: "L" },
-        { t: "Aplica a mudança na próxima entrega", p: "E" }
+        { text: "Nunca penso sobre postura, tom de voz ou contato visual.", score: 0 },
+        { text: "Lembro disso na hora, mas sem muito controle.", score: 1 },
+        { text: "Presto atencao a postura e tento falar com calma.", score: 2 },
+        { text: "Treino postura, contato visual e tom de voz com antecedencia.", score: 3 }
       ]
     },
     {
-      q: "Numa entrevista, sua maior força é:",
+      prompt: "Se o entrevistador perguntar sobre a vaga, voce:",
       options: [
-        { t: "Conexão e empatia", p: "C" },
-        { t: "Raciocínio e profundidade", p: "A" },
-        { t: "Visão e liderança", p: "L" },
-        { t: "Foco em resultado", p: "E" }
+        { text: "Nao sei explicar por que quero aquela oportunidade.", score: 0 },
+        { text: "Consigo falar, mas ainda de forma generica.", score: 1 },
+        { text: "Relaciono meus interesses com a area da vaga.", score: 2 },
+        { text: "Conecto meus objetivos, competencias e o que a empresa busca.", score: 3 }
       ]
     },
     {
-      q: "Você prefere trabalhar:",
+      prompt: "Em relacao ao seu curriculo antes da entrevista, voce costuma:",
       options: [
-        { t: "Em equipes colaborativas", p: "C" },
-        { t: "Com tempo para pensar profundamente", p: "A" },
-        { t: "Liderando iniciativas", p: "L" },
-        { t: "Com metas e prazos claros", p: "E" }
+        { text: "Levar o curriculo sem revisar.", score: 0 },
+        { text: "Dar uma olhada rapida antes da entrevista.", score: 1 },
+        { text: "Revisar os pontos principais e corrigir erros.", score: 2 },
+        { text: "Revisar com cuidado e alinhar o curriculo com a vaga.", score: 3 }
       ]
     },
     {
-      q: "Ao resolver um problema, o que vem primeiro?",
+      prompt: "Quando recebe uma pergunta dificil, sua reacao mais comum e:",
       options: [
-        { t: "Conversar com quem entende do tema", p: "C" },
-        { t: "Levantar dados e entender o contexto", p: "A" },
-        { t: "Mobilizar pessoas em torno da solução", p: "L" },
-        { t: "Testar uma solução o quanto antes", p: "E" }
+        { text: "Travamento e perda de raciocinio.", score: 0 },
+        { text: "Respondo, mas fico muito nervoso.", score: 1 },
+        { text: "Penso um pouco e consigo organizar a resposta.", score: 2 },
+        { text: "Respiro, ganho tempo e respondo com objetividade.", score: 3 }
       ]
     },
     {
-      q: "Como você se descreveria em uma palavra?",
+      prompt: "Voce costuma preparar perguntas para fazer ao entrevistador?",
       options: [
-        { t: "Comunicativo", p: "C" },
-        { t: "Analítico", p: "A" },
-        { t: "Líder", p: "L" },
-        { t: "Realizador", p: "E" }
+        { text: "Nao preparo perguntas.", score: 0 },
+        { text: "As vezes penso em uma pergunta, mas esqueço.", score: 1 },
+        { text: "Normalmente preparo uma ou duas perguntas.", score: 2 },
+        { text: "Sempre preparo perguntas relevantes sobre equipe, rotina e vaga.", score: 3 }
       ]
     },
     {
-      q: "O que você mais quer melhorar?",
+      prompt: "No geral, como voce avalia sua preparacao para entrevistas hoje?",
       options: [
-        { t: "Falar em público com mais segurança", p: "C" },
-        { t: "Tomar decisões mais rápidas", p: "A" },
-        { t: "Delegar e dar feedback", p: "L" },
-        { t: "Planejar com mais antecedência", p: "E" }
+        { text: "Ainda estou no comeco e preciso de muita orientacao.", score: 0 },
+        { text: "Ja comecei a me preparar, mas ainda tenho varias lacunas.", score: 1 },
+        { text: "Estou razoavelmente preparado e sei onde melhorar.", score: 2 },
+        { text: "Estou bem preparado e consigo me apresentar com seguranca.", score: 3 }
       ]
     }
   ];
 
-  var PROFILES = {
-    C: {
-      name: "Perfil Comunicador",
-      description:
-        "Você se conecta facilmente com as pessoas. Empresas valorizam sua empatia, escuta e capacidade de articular ideias.",
+  const PROFILES = [
+    {
+      min: 0,
+      max: 9,
+      name: "Iniciante em entrevistas",
+      description: "Voce esta dando os primeiros passos. O mais importante agora e construir uma base de preparacao simples e consistente.",
       tips: [
-        "Prepare exemplos curtos (situação → ação → resultado) para mostrar impacto, não só fala.",
-        "Use a técnica STAR ao responder perguntas comportamentais.",
-        "Cuide do tom: evite parecer apenas simpático — mostre também execução.",
-        "Pratique pausas; comunicadores tendem a falar muito sob ansiedade.",
-        "Tenha uma pergunta inteligente sobre cultura ou equipe para o entrevistador."
+        "Pesquise a empresa e a vaga antes de cada entrevista.",
+        "Treine uma apresentacao curta sobre quem voce e.",
+        "Revise seu curriculo para nao ser pego de surpresa.",
+        "Anote exemplos reais da sua vida academica, pessoal ou profissional.",
+        "Pratique em voz alta para reduzir a ansiedade."
       ]
     },
-    A: {
-      name: "Perfil Analítico",
-      description:
-        "Você pensa com profundidade, baseia decisões em dados e enxerga riscos. É forte em áreas técnicas e de planejamento.",
+    {
+      min: 10,
+      max: 17,
+      name: "Em desenvolvimento",
+      description: "Voce ja percebe pontos importantes da entrevista, mas ainda precisa de mais organizacao e constancia na preparacao.",
       tips: [
-        "Traduza dados em histórias: o entrevistador precisa entender o impacto.",
-        "Treine respostas mais objetivas — evite explicações longas demais.",
-        "Demonstre colaboração: cite momentos em que trabalhou com outras áreas.",
-        "Tenha exemplos concretos de problemas que resolveu com análise.",
-        "Prepare perguntas sobre processos, ferramentas e métricas da vaga."
+        "Monte respostas com inicio, meio e resultado.",
+        "Treine perguntas classicas como pontos fortes e desafios.",
+        "Prepare perguntas para fazer ao entrevistador.",
+        "Ajuste sua postura, tom de voz e ritmo de fala.",
+        "Alinhe o curriculo com a vaga antes de cada processo."
       ]
     },
-    L: {
-      name: "Perfil Líder",
-      description:
-        "Você toma a frente, organiza pessoas e tem visão de processo. Forte para cargos de coordenação e gestão.",
+    {
+      min: 18,
+      max: 24,
+      name: "Preparado",
+      description: "Voce ja demonstra boa base de preparacao. O proximo passo e refinar suas respostas para passar ainda mais seguranca.",
       tips: [
-        "Mostre humildade: liderança real inclui escutar e errar.",
-        "Tenha exemplos de quando delegou e desenvolveu alguém.",
-        "Use indicadores: quantas pessoas, quais resultados, em quanto tempo.",
-        "Prepare-se para perguntas sobre conflitos resolvidos.",
-        "Pergunte sobre desafios atuais da equipe — demonstra interesse genuíno."
+        "Use exemplos concretos para provar suas competencias.",
+        "Evite respostas genericas e conecte sua fala com a vaga.",
+        "Treine entrevistas simuladas para ganhar naturalidade.",
+        "Mostre interesse genuino pelo trabalho e pela empresa.",
+        "Revise detalhes de horario, local e materiais com antecedencia."
       ]
     },
-    E: {
-      name: "Perfil Executor",
-      description:
-        "Você é direto, prático e orientado a entrega. Empresas que valorizam resultado rápido amam esse perfil.",
+    {
+      min: 25,
+      max: 30,
+      name: "Perfil forte",
+      description: "Voce apresenta um nivel alto de preparacao. Agora o foco e manter consistencia e adaptar sua comunicacao para cada oportunidade.",
       tips: [
-        "Mostre que também planeja — não só executa.",
-        "Inclua exemplos de aprendizado com erros, não só de sucesso.",
-        "Cuide para não parecer impaciente nas respostas: ouça com calma.",
-        "Quantifique entregas: prazos, números, percentuais.",
-        "Pergunte sobre metas e prioridades dos próximos meses."
+        "Personalize seus exemplos conforme a vaga desejada.",
+        "Mostre resultados concretos sempre que possivel.",
+        "Equilibre seguranca com escuta ativa durante a conversa.",
+        "Ajuste seu discurso para diferentes perfis de entrevistador.",
+        "Mantenha curriculo, portfolio e argumentos alinhados."
       ]
     }
-  };
+  ];
 
-  /* Estado */
-  var current = 0;
-  var answers = new Array(QUESTIONS.length).fill(null);
+  let currentQuestionIndex = 0;
+  let answers = new Array(QUESTIONS.length).fill(null);
 
-  /* DOM */
-  var $question = document.getElementById("quizQuestion");
-  var $progressBar = document.getElementById("progressBar");
-  var $progressText = document.getElementById("progressText");
-  var $btnPrev = document.getElementById("btnPrev");
-  var $btnNext = document.getElementById("btnNext");
-  var $btnFinish = document.getElementById("btnFinish");
-  var $error = document.getElementById("quizError");
-  var $result = document.getElementById("resultSection");
-  var $resultProfile = document.getElementById("resultProfile");
-  var $resultDescription = document.getElementById("resultDescription");
-  var $resultTips = document.getElementById("resultTips");
-  var $btnRestart = document.getElementById("btnRestart");
-  var $form = document.getElementById("quizForm");
+  const questionContainer = document.querySelector("#quizQuestion");
+  const progressBar = document.querySelector("#progressBar");
+  const progressText = document.querySelector("#progressText");
+  const previousButton = document.querySelector("#btnPrev");
+  const nextButton = document.querySelector("#btnNext");
+  const finishButton = document.querySelector("#btnFinish");
+  const errorMessage = document.querySelector("#quizError");
+  const resultSection = document.querySelector("#resultSection");
+  const resultScore = document.querySelector("#resultScore");
+  const resultProfile = document.querySelector("#resultProfile");
+  const resultDescription = document.querySelector("#resultDescription");
+  const resultTips = document.querySelector("#resultTips");
+  const restartButton = document.querySelector("#btnRestart");
+  const form = document.querySelector("#quizForm");
 
-  if (!$question || !$form) return;
-
-  function render() {
-    var q = QUESTIONS[current];
-    var optsHtml = q.options
-      .map(function (opt, idx) {
-        var checked = answers[current] === idx ? "checked" : "";
-        var selected = answers[current] === idx ? " selected" : "";
-        return (
-          '<li><label class="option' + selected + '">' +
-          '<input type="radio" name="q" value="' + idx + '" ' + checked + " />" +
-          escapeHtml(opt.t) +
-          "</label></li>"
-        );
-      })
-      .join("");
-
-    $question.innerHTML =
-      "<h2>" + escapeHtml(q.q) + "</h2><ul class=\"options\">" + optsHtml + "</ul>";
-
-    var pct = ((current + 1) / QUESTIONS.length) * 100;
-    $progressBar.style.width = pct + "%";
-    $progressText.textContent = "Pergunta " + (current + 1) + " de " + QUESTIONS.length;
-
-    $btnPrev.disabled = current === 0;
-    var hasAnswer = answers[current] !== null;
-    var isLast = current === QUESTIONS.length - 1;
-
-    $btnNext.classList.toggle("hidden", isLast);
-    $btnFinish.classList.toggle("hidden", !isLast);
-    $btnNext.disabled = !hasAnswer;
-    $btnFinish.disabled = !hasAnswer;
-    $error.textContent = "";
+  if (!questionContainer || !form) {
+    return;
   }
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  function getCurrentQuestion() {
+    return QUESTIONS[currentQuestionIndex];
+  }
+
+  function updateProgress() {
+    const percentage = ((currentQuestionIndex + 1) / QUESTIONS.length) * 100;
+    progressBar.style.width = percentage + "%";
+    progressText.textContent = "Pergunta " + (currentQuestionIndex + 1) + " de " + QUESTIONS.length;
+  }
+
+  function updateButtons() {
+    const answered = answers[currentQuestionIndex] !== null;
+    const isLastQuestion = currentQuestionIndex === QUESTIONS.length - 1;
+
+    previousButton.disabled = currentQuestionIndex === 0;
+    nextButton.disabled = !answered;
+    finishButton.disabled = !answered;
+    nextButton.classList.toggle("hidden", isLastQuestion);
+    finishButton.classList.toggle("hidden", !isLastQuestion);
+  }
+
+  function createOption(option, optionIndex) {
+    const item = document.createElement("li");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    const text = document.createElement("span");
+
+    label.className = "option";
+
+    input.type = "radio";
+    input.name = "quizOption";
+    input.value = String(optionIndex);
+    input.checked = answers[currentQuestionIndex] === optionIndex;
+
+    if (input.checked) {
+      label.classList.add("selected");
+    }
+
+    text.textContent = option.text;
+
+    label.appendChild(input);
+    label.appendChild(text);
+    item.appendChild(label);
+
+    return item;
+  }
+
+  function renderQuestion() {
+    const question = getCurrentQuestion();
+    const title = document.createElement("h2");
+    const optionsList = document.createElement("ul");
+
+    questionContainer.textContent = "";
+    errorMessage.textContent = "";
+
+    title.textContent = question.prompt;
+    optionsList.className = "options";
+
+    question.options.forEach(function (option, optionIndex) {
+      optionsList.appendChild(createOption(option, optionIndex));
+    });
+
+    questionContainer.appendChild(title);
+    questionContainer.appendChild(optionsList);
+
+    updateProgress();
+    updateButtons();
+  }
+
+  function showSelectionState() {
+    questionContainer.querySelectorAll(".option").forEach(function (optionLabel, optionIndex) {
+      optionLabel.classList.toggle("selected", optionIndex === answers[currentQuestionIndex]);
     });
   }
 
-  /* Eventos */
-  $question.addEventListener("change", function (e) {
-    var target = e.target;
-    if (target && target.name === "q") {
-      answers[current] = Number(target.value);
-      // Atualiza visual
-      var opts = $question.querySelectorAll(".option");
-      opts.forEach(function (el, i) {
-        el.classList.toggle("selected", i === answers[current]);
-      });
-      $btnNext.disabled = false;
-      $btnFinish.disabled = false;
-    }
-  });
+  function getFinalScore() {
+    return answers.reduce(function (total, answer, questionIndex) {
+      if (answer === null) {
+        return total;
+      }
+      return total + QUESTIONS[questionIndex].options[answer].score;
+    }, 0);
+  }
 
-  $btnPrev.addEventListener("click", function () {
-    if (current > 0) {
-      current--;
-      render();
-    }
-  });
+  function getProfile(score) {
+    return PROFILES.find(function (profile) {
+      return score >= profile.min && score <= profile.max;
+    }) || PROFILES[0];
+  }
 
-  $btnNext.addEventListener("click", function () {
-    if (answers[current] === null) {
-      $error.textContent = "Selecione uma opção para continuar.";
+  function renderTips(tips) {
+    resultTips.textContent = "";
+
+    tips.forEach(function (tip) {
+      const item = document.createElement("li");
+      item.textContent = tip;
+      resultTips.appendChild(item);
+    });
+  }
+
+  function showResult() {
+    const score = getFinalScore();
+    const profile = getProfile(score);
+
+    resultScore.textContent = "Pontuacao final: " + score + " de 30";
+    resultProfile.textContent = profile.name;
+    resultDescription.textContent = profile.description;
+    renderTips(profile.tips);
+
+    form.classList.add("hidden");
+    resultSection.classList.remove("hidden");
+    resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  questionContainer.addEventListener("change", function (event) {
+    const target = event.target;
+
+    if (!target || target.name !== "quizOption") {
       return;
     }
-    if (current < QUESTIONS.length - 1) {
-      current++;
-      render();
-    }
+
+    answers[currentQuestionIndex] = Number(target.value);
+    errorMessage.textContent = "";
+    showSelectionState();
+    updateButtons();
   });
 
-  $btnFinish.addEventListener("click", function () {
-    if (answers[current] === null) {
-      $error.textContent = "Selecione uma opção para finalizar.";
+  previousButton.addEventListener("click", function () {
+    if (currentQuestionIndex === 0) {
       return;
     }
+
+    currentQuestionIndex -= 1;
+    renderQuestion();
+  });
+
+  nextButton.addEventListener("click", function () {
+    if (answers[currentQuestionIndex] === null) {
+      errorMessage.textContent = "Selecione uma opcao para continuar.";
+      return;
+    }
+
+    currentQuestionIndex += 1;
+    renderQuestion();
+  });
+
+  finishButton.addEventListener("click", function () {
+    if (answers[currentQuestionIndex] === null) {
+      errorMessage.textContent = "Selecione uma opcao para finalizar.";
+      return;
+    }
+
     showResult();
   });
 
-  $btnRestart.addEventListener("click", function () {
-    current = 0;
+  restartButton.addEventListener("click", function () {
+    currentQuestionIndex = 0;
     answers = new Array(QUESTIONS.length).fill(null);
-    $result.classList.add("hidden");
-    $form.classList.remove("hidden");
-    render();
+    form.classList.remove("hidden");
+    resultSection.classList.add("hidden");
+    renderQuestion();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  function showResult() {
-    var scores = { C: 0, A: 0, L: 0, E: 0 };
-    answers.forEach(function (a, i) {
-      if (a === null) return;
-      var key = QUESTIONS[i].options[a].p;
-      scores[key]++;
-    });
-    var top = Object.keys(scores).reduce(function (best, k) {
-      return scores[k] > scores[best] ? k : best;
-    }, "C");
-    var profile = PROFILES[top];
-
-    $resultProfile.textContent = profile.name;
-    $resultDescription.textContent = profile.description;
-    $resultTips.innerHTML = profile.tips
-      .map(function (t) { return "<li>" + escapeHtml(t) + "</li>"; })
-      .join("");
-
-    $form.classList.add("hidden");
-    $result.classList.remove("hidden");
-    $result.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  render();
+  renderQuestion();
 })();

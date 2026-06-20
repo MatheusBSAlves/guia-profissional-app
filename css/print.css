@@ -1,54 +1,165 @@
-/* Estilos específicos de impressão para o currículo */
 @page {
   size: A4;
-  margin: 18mm 16mm;
+  margin: 9mm 8mm;
 }
 
-html, body {
-  background: #fff !important;
-  color: #000 !important;
+html,
+body {
+  background: #ffffff !important;
+  color: #111111 !important;
 }
 
-/* Força aparência clara no currículo impresso, mesmo com tema escuro ativo */
-html[data-theme="dark"] .cv-paper,
-html[data-theme="dark"] .cv-paper * {
-  background: #fff !important;
-  color: #1b2330 !important;
-  border-color: #e3e8f0 !important;
-}
-html[data-theme="dark"] .cv-paper .chip-list li {
-  background: #e6edff !important;
-  color: #173bb0 !important;
+body::before,
+.page-banner::before,
+.page-banner::after,
+.hero::before,
+.hero::after {
+  display: none !important;
 }
 
 .no-print,
 .site-header,
 .site-footer,
-.page-header,
-.cv-form { display: none !important; }
+.page-banner,
+.info-strip,
+.cv-form,
+.cv-preview-note {
+  display: none !important;
+}
 
-main.container,
+main,
 .page,
+.container,
+.page-stack,
 .cv-layout,
 .cv-preview {
   display: block !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  max-width: none !important;
   width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+}
+
+.cv-paper,
+.cv-paper * {
+  background: #ffffff !important;
+  color: #142033 !important;
+  border-color: #d8e1ef !important;
+  box-shadow: none !important;
 }
 
 .cv-paper {
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
   min-height: 0 !important;
-  font-size: 11pt;
-  color: #000 !important;
+  width: 178mm !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  font-size: 13.6pt !important;
+  line-height: 1.28 !important;
 }
 
-.cv-header { border-bottom: 2px solid #000 !important; }
-.cv-section h3 { color: #000 !important; border-bottom-color: #888 !important; }
-.chip-list li { background: #f0f0f0 !important; color: #000 !important; }
-a { color: #000 !important; text-decoration: none !important; }
+.cv-header {
+  padding-bottom: 8px !important;
+  margin-bottom: 8px !important;
+  border-bottom: 1.5px solid #1f2937 !important;
+  break-inside: avoid;
+}
+
+.cv-header h2 {
+  margin: 0 0 2px !important;
+  font-size: 20pt !important;
+  line-height: 1.04 !important;
+}
+
+.cv-cargo {
+  margin: 0 0 3px !important;
+  font-size: 16.5pt !important;
+}
+
+.cv-contato {
+  font-size: 10.6pt !important;
+  line-height: 1.35 !important;
+}
+
+.cv-section {
+  margin-top: 8px !important;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.cv-section h3 {
+  margin: 0 0 5px !important;
+  padding-bottom: 2px !important;
+  border-bottom-color: #a8b3c4 !important;
+  font-size: 11.5pt !important;
+  letter-spacing: 0.06em !important;
+}
+
+.cv-section p,
+.cv-entry-desc,
+.preview-list li {
+  line-height: 1.3 !important;
+  font-size: 11.9pt !important;
+}
+
+.cv-entry {
+  margin-bottom: 0 !important;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.cv-entry-title {
+  line-height: 1.25 !important;
+}
+
+.cv-entry-meta {
+  margin: 1px 0 2px !important;
+  font-size: 11.1pt !important;
+}
+
+.preview-list {
+  margin: 0 !important;
+  padding-left: 14px !important;
+}
+
+.preview-list li {
+  margin-bottom: 2px !important;
+}
+
+.chip-list li {
+  background: #eef2ff !important;
+  color: #142033 !important;
+  padding: 2px 7px !important;
+  font-size: 10.9pt !important;
+  line-height: 1.2 !important;
+}
+
+.chip-list,
+.preview-list {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#prevExperiencia,
+#prevFormacao {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 6px 14px !important;
+}
+
+#prevProjetos,
+#prevCursos {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 2px 18px !important;
+  padding-left: 14px !important;
+}
+
+.cv-paper *,
+.cv-paper *::before,
+.cv-paper *::after {
+  box-shadow: none !important;
+}

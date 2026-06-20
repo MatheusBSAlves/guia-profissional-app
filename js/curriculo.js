@@ -1,266 +1,592 @@
-/* Gerador de currículo — JavaScript Vanilla com live preview */
+/* Gerador de curriculo com preview em tempo real */
 (function () {
   "use strict";
 
-  var $form = document.getElementById("cvForm");
-  if (!$form) return;
+  const form = document.querySelector("#cvForm");
+  if (!form) {
+    return;
+  }
 
-  var $expList = document.getElementById("experienciaList");
-  var $formList = document.getElementById("formacaoList");
-  var $addExp = document.getElementById("addExperiencia");
-  var $addForm = document.getElementById("addFormacao");
-  var $btnPrint = document.getElementById("btnPrint");
-  var $btnClear = document.getElementById("btnClear");
+  const experienceList = document.querySelector("#experienciaList");
+  const educationList = document.querySelector("#formacaoList");
+  const addExperienceButton = document.querySelector("#addExperiencia");
+  const addEducationButton = document.querySelector("#addFormacao");
+  const printButton = document.querySelector("#btnPrint");
+  const clearButton = document.querySelector("#btnClear");
+  const personalError = document.querySelector("#errorPessoais");
+  const expandAllButton = document.querySelector("#expandAllSections");
+  const collapseAllButton = document.querySelector("#collapseAllSections");
+  const formSections = Array.from(form.querySelectorAll(".form-section"));
 
-  /* Preview targets */
-  var $prevNome = document.getElementById("prevNome");
-  var $prevCargo = document.getElementById("prevCargo");
-  var $prevContato = document.getElementById("prevContato");
-  var $prevResumo = document.getElementById("prevResumo");
-  var $prevResumoWrap = document.getElementById("prevResumoWrap");
-  var $prevExp = document.getElementById("prevExperiencia");
-  var $prevExpWrap = document.getElementById("prevExperienciaWrap");
-  var $prevForm = document.getElementById("prevFormacao");
-  var $prevFormWrap = document.getElementById("prevFormacaoWrap");
-  var $prevHab = document.getElementById("prevHabilidades");
-  var $prevHabWrap = document.getElementById("prevHabilidadesWrap");
-  var $prevIdi = document.getElementById("prevIdiomas");
-  var $prevIdiWrap = document.getElementById("prevIdiomasWrap");
+  const preview = {
+    name: document.querySelector("#prevNome"),
+    role: document.querySelector("#prevCargo"),
+    contact: document.querySelector("#prevContato"),
+    objective: document.querySelector("#prevObjetivo"),
+    objectiveWrap: document.querySelector("#prevObjetivoWrap"),
+    summary: document.querySelector("#prevResumo"),
+    summaryWrap: document.querySelector("#prevResumoWrap"),
+    experience: document.querySelector("#prevExperiencia"),
+    experienceWrap: document.querySelector("#prevExperienciaWrap"),
+    education: document.querySelector("#prevFormacao"),
+    educationWrap: document.querySelector("#prevFormacaoWrap"),
+    projects: document.querySelector("#prevProjetos"),
+    projectsWrap: document.querySelector("#prevProjetosWrap"),
+    skills: document.querySelector("#prevHabilidades"),
+    skillsWrap: document.querySelector("#prevHabilidadesWrap"),
+    languages: document.querySelector("#prevIdiomas"),
+    languagesWrap: document.querySelector("#prevIdiomasWrap"),
+    courses: document.querySelector("#prevCursos"),
+    coursesWrap: document.querySelector("#prevCursosWrap")
+  };
 
-  function escapeHtml(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  function createLabeledInput(text, className, placeholder, maxLength) {
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+
+    label.className = "field";
+    label.textContent = text;
+    input.type = "text";
+    input.className = className;
+
+    if (placeholder) {
+      input.placeholder = placeholder;
+    }
+
+    if (maxLength) {
+      input.maxLength = maxLength;
+    }
+
+    label.appendChild(input);
+    return label;
+  }
+
+  function createLabeledTextarea(text, className, rows, maxLength) {
+    const label = document.createElement("label");
+    const textarea = document.createElement("textarea");
+
+    label.className = "field";
+    label.textContent = text;
+    textarea.className = className;
+    textarea.rows = rows;
+    textarea.maxLength = maxLength;
+
+    label.appendChild(textarea);
+    return label;
+  }
+
+  function createGrid(children) {
+    const grid = document.createElement("div");
+    grid.className = "grid-2";
+
+    children.forEach(function (child) {
+      grid.appendChild(child);
+    });
+
+    return grid;
+  }
+
+  function createRemoveButton(label) {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "dynamic-remove";
+    button.setAttribute("data-remove-item", "true");
+    button.setAttribute("aria-label", label);
+    button.textContent = "Remover";
+
+    return button;
+  }
+
+  function createExperienceItem() {
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "dynamic-item exp-item";
+    wrapper.appendChild(createRemoveButton("Remover experiencia"));
+    wrapper.appendChild(
+      createGrid([
+        createLabeledInput("Cargo", "exp-cargo", "", 80),
+        createLabeledInput("Empresa", "exp-empresa", "", 80),
+        createLabeledInput("Inicio", "exp-inicio", "MM/AAAA", 20),
+        createLabeledInput("Fim", "exp-fim", "MM/AAAA ou atual", 20)
+      ])
+    );
+    wrapper.appendChild(createLabeledTextarea("Descricao", "exp-desc", 3, 400));
+
+    return wrapper;
+  }
+
+  function createEducationItem() {
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "dynamic-item form-item";
+    wrapper.appendChild(createRemoveButton("Remover formacao"));
+    wrapper.appendChild(
+      createGrid([
+        createLabeledInput("Curso", "form-curso", "", 80),
+        createLabeledInput("Instituicao", "form-inst", "", 80),
+        createLabeledInput("Inicio", "form-inicio", "AAAA", 10),
+        createLabeledInput("Conclusao", "form-fim", "AAAA ou cursando", 20)
+      ])
+    );
+
+    return wrapper;
+  }
+
+  function getValue(id) {
+    const field = document.querySelector("#" + id);
+    return field ? field.value.trim() : "";
+  }
+
+  function splitCsv(value) {
+    return value
+      .split(",")
+      .map(function (item) {
+        return item.trim();
+      })
+      .filter(function (item) {
+        return item.length > 0;
+      });
+  }
+
+  function splitLines(value) {
+    return value
+      .split("\n")
+      .map(function (item) {
+        return item.trim();
+      })
+      .filter(function (item) {
+        return item.length > 0;
+      });
+  }
+
+  function collectDynamicExperience() {
+    return Array.prototype.map.call(experienceList.querySelectorAll(".exp-item"), function (item) {
+      return {
+        role: item.querySelector(".exp-cargo").value.trim(),
+        company: item.querySelector(".exp-empresa").value.trim(),
+        start: item.querySelector(".exp-inicio").value.trim(),
+        end: item.querySelector(".exp-fim").value.trim(),
+        description: item.querySelector(".exp-desc").value.trim()
+      };
     });
   }
 
-  /* -------- Itens dinâmicos: experiência e formação -------- */
-  function makeExperienciaItem() {
-    var div = document.createElement("div");
-    div.className = "dynamic-item exp-item";
-    div.innerHTML =
-      '<button type="button" class="remove" aria-label="Remover experiência">Remover</button>' +
-      '<div class="grid-2">' +
-        '<label>Cargo<input type="text" class="exp-cargo" maxlength="80" /></label>' +
-        '<label>Empresa<input type="text" class="exp-empresa" maxlength="80" /></label>' +
-        '<label>Início<input type="text" class="exp-inicio" placeholder="MM/AAAA" maxlength="20" /></label>' +
-        '<label>Fim<input type="text" class="exp-fim" placeholder="MM/AAAA ou Atual" maxlength="20" /></label>' +
-      "</div>" +
-      '<label>Descrição<textarea class="exp-desc" rows="2" maxlength="400"></textarea></label>';
-    return div;
+  function collectDynamicEducation() {
+    return Array.prototype.map.call(educationList.querySelectorAll(".form-item"), function (item) {
+      return {
+        course: item.querySelector(".form-curso").value.trim(),
+        institution: item.querySelector(".form-inst").value.trim(),
+        start: item.querySelector(".form-inicio").value.trim(),
+        end: item.querySelector(".form-fim").value.trim()
+      };
+    });
   }
 
-  function makeFormacaoItem() {
-    var div = document.createElement("div");
-    div.className = "dynamic-item form-item";
-    div.innerHTML =
-      '<button type="button" class="remove" aria-label="Remover formação">Remover</button>' +
-      '<div class="grid-2">' +
-        '<label>Curso<input type="text" class="form-curso" maxlength="80" /></label>' +
-        '<label>Instituição<input type="text" class="form-inst" maxlength="80" /></label>' +
-        '<label>Início<input type="text" class="form-inicio" placeholder="AAAA" maxlength="10" /></label>' +
-        '<label>Conclusão<input type="text" class="form-fim" placeholder="AAAA ou Cursando" maxlength="20" /></label>' +
-      "</div>";
-    return div;
-  }
-
-  $addExp.addEventListener("click", function () {
-    $expList.appendChild(makeExperienciaItem());
-    renderPreview();
-  });
-  $addForm.addEventListener("click", function () {
-    $formList.appendChild(makeFormacaoItem());
-    renderPreview();
-  });
-
-  /* Delegação para remoção */
-  document.addEventListener("click", function (e) {
-    var target = e.target;
-    if (target && target.classList && target.classList.contains("remove")) {
-      var item = target.closest(".dynamic-item");
-      if (item) {
-        item.remove();
-        renderPreview();
-      }
-    }
-  });
-
-  /* -------- Validações simples -------- */
-  function validateEmail(v) {
-    if (!v) return false;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  }
-
-  function validateFields() {
-    var nome = document.getElementById("nome");
-    var email = document.getElementById("email");
-    var err = document.getElementById("errorPessoais");
-    var msgs = [];
-
-    if (!nome.value.trim()) {
-      nome.classList.add("invalid");
-      msgs.push("Informe seu nome.");
-    } else {
-      nome.classList.remove("invalid");
-    }
-
-    if (!validateEmail(email.value.trim())) {
-      email.classList.add("invalid");
-      msgs.push("Informe um e-mail válido.");
-    } else {
-      email.classList.remove("invalid");
-    }
-
-    err.textContent = msgs.join(" ");
-    return msgs.length === 0;
-  }
-
-  /* -------- Coleta de dados -------- */
-  function collect() {
-    var get = function (id) {
-      var el = document.getElementById(id);
-      return el ? el.value.trim() : "";
-    };
-
-    var experiencias = Array.prototype.map.call(
-      $expList.querySelectorAll(".exp-item"),
-      function (item) {
-        return {
-          cargo: item.querySelector(".exp-cargo").value.trim(),
-          empresa: item.querySelector(".exp-empresa").value.trim(),
-          inicio: item.querySelector(".exp-inicio").value.trim(),
-          fim: item.querySelector(".exp-fim").value.trim(),
-          desc: item.querySelector(".exp-desc").value.trim()
-        };
-      }
-    );
-
-    var formacoes = Array.prototype.map.call(
-      $formList.querySelectorAll(".form-item"),
-      function (item) {
-        return {
-          curso: item.querySelector(".form-curso").value.trim(),
-          inst: item.querySelector(".form-inst").value.trim(),
-          inicio: item.querySelector(".form-inicio").value.trim(),
-          fim: item.querySelector(".form-fim").value.trim()
-        };
-      }
-    );
-
-    var listFromCsv = function (s) {
-      return s
-        .split(",")
-        .map(function (x) { return x.trim(); })
-        .filter(function (x) { return x.length > 0; });
-    };
-
+  function collectData() {
     return {
-      nome: get("nome"),
-      cargo: get("cargo"),
-      email: get("email"),
-      telefone: get("telefone"),
-      cidade: get("cidade"),
-      site: get("site"),
-      resumo: get("resumo"),
-      experiencias: experiencias,
-      formacoes: formacoes,
-      habilidades: listFromCsv(get("habilidades")),
-      idiomas: listFromCsv(get("idiomas"))
+      name: getValue("nome"),
+      role: getValue("cargo"),
+      email: getValue("email"),
+      phone: getValue("telefone"),
+      city: getValue("cidade"),
+      site: getValue("site"),
+      objective: getValue("objetivo"),
+      summary: getValue("resumo"),
+      experience: collectDynamicExperience(),
+      education: collectDynamicEducation(),
+      projects: splitLines(getValue("projetos")),
+      skills: splitCsv(getValue("habilidades")),
+      languages: splitCsv(getValue("idiomas")),
+      courses: splitLines(getValue("cursos"))
     };
   }
 
-  /* -------- Renderização do preview -------- */
-  function renderPreview() {
-    var d = collect();
-
-    $prevNome.textContent = d.nome || "Seu nome";
-    $prevCargo.textContent = d.cargo || "Cargo desejado";
-
-    var contato = [];
-    if (d.email) contato.push(d.email);
-    if (d.telefone) contato.push(d.telefone);
-    if (d.cidade) contato.push(d.cidade);
-    if (d.site) contato.push(d.site);
-    $prevContato.textContent = contato.join("  •  ");
-
-    /* Resumo */
-    if (d.resumo) {
-      $prevResumo.textContent = d.resumo;
-      $prevResumoWrap.hidden = false;
-    } else {
-      $prevResumoWrap.hidden = true;
-    }
-
-    /* Experiência */
-    var expHtml = d.experiencias
-      .filter(function (e) { return e.cargo || e.empresa || e.desc; })
-      .map(function (e) {
-        var periodo = [e.inicio, e.fim].filter(Boolean).join(" — ");
-        var meta = [e.empresa, periodo].filter(Boolean).join("  •  ");
-        return (
-          '<div class="cv-entry">' +
-            '<div class="cv-entry-title">' + escapeHtml(e.cargo || "Cargo") + "</div>" +
-            (meta ? '<div class="cv-entry-meta">' + escapeHtml(meta) + "</div>" : "") +
-            (e.desc ? '<p class="cv-entry-desc">' + escapeHtml(e.desc) + "</p>" : "") +
-          "</div>"
-        );
-      })
-      .join("");
-    $prevExp.innerHTML = expHtml;
-    $prevExpWrap.hidden = expHtml.length === 0;
-
-    /* Formação */
-    var formHtml = d.formacoes
-      .filter(function (f) { return f.curso || f.inst; })
-      .map(function (f) {
-        var periodo = [f.inicio, f.fim].filter(Boolean).join(" — ");
-        var meta = [f.inst, periodo].filter(Boolean).join("  •  ");
-        return (
-          '<div class="cv-entry">' +
-            '<div class="cv-entry-title">' + escapeHtml(f.curso || "Curso") + "</div>" +
-            (meta ? '<div class="cv-entry-meta">' + escapeHtml(meta) + "</div>" : "") +
-          "</div>"
-        );
-      })
-      .join("");
-    $prevForm.innerHTML = formHtml;
-    $prevFormWrap.hidden = formHtml.length === 0;
-
-    /* Habilidades */
-    $prevHab.innerHTML = d.habilidades
-      .map(function (h) { return "<li>" + escapeHtml(h) + "</li>"; })
-      .join("");
-    $prevHabWrap.hidden = d.habilidades.length === 0;
-
-    /* Idiomas */
-    $prevIdi.innerHTML = d.idiomas
-      .map(function (i) { return "<li>" + escapeHtml(i) + "</li>"; })
-      .join("");
-    $prevIdiWrap.hidden = d.idiomas.length === 0;
+  function clearElement(element) {
+    element.textContent = "";
   }
 
-  /* -------- Eventos -------- */
-  $form.addEventListener("input", renderPreview);
-  $form.addEventListener("change", renderPreview);
+  function toggleSection(section, shouldShow) {
+    section.hidden = !shouldShow;
+  }
 
-  $btnPrint.addEventListener("click", function () {
-    if (!validateFields()) {
-      var nome = document.getElementById("nome");
-      if (nome) nome.focus();
+  function renderList(container, items) {
+    clearElement(container);
+
+    items.forEach(function (itemText) {
+      const item = document.createElement("li");
+      item.textContent = itemText;
+      container.appendChild(item);
+    });
+  }
+
+  function renderChipList(container, items) {
+    clearElement(container);
+
+    items.forEach(function (itemText) {
+      const item = document.createElement("li");
+      item.textContent = itemText;
+      container.appendChild(item);
+    });
+  }
+
+  function createEntry(titleText, metaText, descriptionText) {
+    const wrapper = document.createElement("div");
+    const title = document.createElement("div");
+
+    wrapper.className = "cv-entry";
+    title.className = "cv-entry-title";
+    title.textContent = titleText;
+    wrapper.appendChild(title);
+
+    if (metaText) {
+      const meta = document.createElement("div");
+      meta.className = "cv-entry-meta";
+      meta.textContent = metaText;
+      wrapper.appendChild(meta);
+    }
+
+    if (descriptionText) {
+      const description = document.createElement("p");
+      description.className = "cv-entry-desc";
+      description.textContent = descriptionText;
+      wrapper.appendChild(description);
+    }
+
+    return wrapper;
+  }
+
+  function renderExperience(items) {
+    clearElement(preview.experience);
+
+    items
+      .filter(function (item) {
+        return item.role || item.company || item.description;
+      })
+      .forEach(function (item) {
+        const period = [item.start, item.end].filter(Boolean).join(" - ");
+        const meta = [item.company, period].filter(Boolean).join(" | ");
+
+        preview.experience.appendChild(
+          createEntry(item.role || "Cargo", meta, item.description)
+        );
+      });
+
+    toggleSection(preview.experienceWrap, preview.experience.childElementCount > 0);
+  }
+
+  function renderEducation(items) {
+    clearElement(preview.education);
+
+    items
+      .filter(function (item) {
+        return item.course || item.institution;
+      })
+      .forEach(function (item) {
+        const period = [item.start, item.end].filter(Boolean).join(" - ");
+        const meta = [item.institution, period].filter(Boolean).join(" | ");
+
+        preview.education.appendChild(
+          createEntry(item.course || "Curso", meta, "")
+        );
+      });
+
+    toggleSection(preview.educationWrap, preview.education.childElementCount > 0);
+  }
+
+  function validateEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function getSectionByKey(key) {
+    return form.querySelector('[data-section-key="' + key + '"]');
+  }
+
+  function setSectionOpen(section, shouldOpen) {
+    if (section) {
+      section.open = shouldOpen;
+    }
+  }
+
+  function openSectionByKey(key) {
+    setSectionOpen(getSectionByKey(key), true);
+  }
+
+  function openSectionForElement(element) {
+    if (!element) {
       return;
     }
+
+    const section = element.closest(".form-section");
+    if (!section) {
+      return;
+    }
+
+    section.open = true;
+    section.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function countCompletedItems(items, keys) {
+    return items.filter(function (item) {
+      return keys.some(function (key) {
+        return Boolean(item[key]);
+      });
+    }).length;
+  }
+
+  function formatCountLabel(count, singularLabel, pluralLabel, emptyLabel) {
+    if (count === 0) {
+      return emptyLabel;
+    }
+
+    if (count === 1) {
+      return "1 " + singularLabel;
+    }
+
+    return String(count) + " " + pluralLabel;
+  }
+
+  function getSectionStatus(section, data) {
+    const key = section.dataset.sectionKey;
+    const hasError = section.querySelector(".invalid") || (key === "personal" && personalError.textContent.trim());
+    const personalFilledCount = [data.name, data.role, data.email, data.phone, data.city, data.site].filter(Boolean).length;
+    const experienceCount = countCompletedItems(data.experience, ["role", "company", "description"]);
+    const educationCount = countCompletedItems(data.education, ["course", "institution"]);
+
+    if (hasError) {
+      return { label: "Com erro", className: "has-error" };
+    }
+
+    switch (key) {
+      case "personal":
+        if (data.name && validateEmail(data.email)) {
+          return { label: "Preenchida", className: "is-filled" };
+        }
+        if (personalFilledCount > 0) {
+          return { label: "Em preenchimento", className: "is-partial" };
+        }
+        return { label: "Obrigatorio", className: "is-empty" };
+      case "objective":
+        return data.objective
+          ? { label: "Preenchida", className: "is-filled" }
+          : { label: "Vazia", className: "is-empty" };
+      case "summary":
+        return data.summary
+          ? { label: "Preenchida", className: "is-filled" }
+          : { label: "Vazia", className: "is-empty" };
+      case "experience":
+        return {
+          label: formatCountLabel(experienceCount, "experiencia", "experiencias", "Nenhuma"),
+          className: experienceCount > 0 ? "is-filled" : "is-empty"
+        };
+      case "education":
+        return {
+          label: formatCountLabel(educationCount, "formacao", "formacoes", "Nenhuma"),
+          className: educationCount > 0 ? "is-filled" : "is-empty"
+        };
+      case "projects":
+        return {
+          label: formatCountLabel(data.projects.length, "projeto", "projetos", "Nenhum"),
+          className: data.projects.length > 0 ? "is-filled" : "is-empty"
+        };
+      case "skills":
+        return {
+          label: formatCountLabel(data.skills.length, "habilidade", "habilidades", "Nenhuma"),
+          className: data.skills.length > 0 ? "is-filled" : "is-empty"
+        };
+      case "languages":
+        return {
+          label: formatCountLabel(data.languages.length, "idioma", "idiomas", "Nenhum"),
+          className: data.languages.length > 0 ? "is-filled" : "is-empty"
+        };
+      case "courses":
+        return {
+          label: formatCountLabel(data.courses.length, "curso", "cursos", "Nenhum"),
+          className: data.courses.length > 0 ? "is-filled" : "is-empty"
+        };
+      default:
+        return { label: "Vazia", className: "is-empty" };
+    }
+  }
+
+  function updateSectionStates() {
+    const data = collectData();
+
+    formSections.forEach(function (section) {
+      const statusElement = section.querySelector("[data-section-status]");
+      const status = getSectionStatus(section, data);
+
+      section.classList.remove("is-empty", "is-filled", "is-partial", "has-error");
+      section.classList.add(status.className);
+
+      if (statusElement) {
+        statusElement.textContent = status.label;
+      }
+    });
+  }
+
+  function renderPreview() {
+    const data = collectData();
+    const contactParts = [];
+
+    preview.name.textContent = data.name || "Seu nome";
+    preview.role.textContent = data.role || "Cargo de interesse";
+
+    if (data.email) {
+      contactParts.push(data.email);
+    }
+    if (data.phone) {
+      contactParts.push(data.phone);
+    }
+    if (data.city) {
+      contactParts.push(data.city);
+    }
+    if (data.site) {
+      contactParts.push(data.site);
+    }
+
+    preview.contact.textContent = contactParts.join(" | ");
+    preview.objective.textContent = data.objective;
+    preview.summary.textContent = data.summary;
+
+    toggleSection(preview.objectiveWrap, Boolean(data.objective));
+    toggleSection(preview.summaryWrap, Boolean(data.summary));
+
+    renderExperience(data.experience);
+    renderEducation(data.education);
+    renderList(preview.projects, data.projects);
+    renderChipList(preview.skills, data.skills);
+    renderChipList(preview.languages, data.languages);
+    renderList(preview.courses, data.courses);
+
+    toggleSection(preview.projectsWrap, data.projects.length > 0);
+    toggleSection(preview.skillsWrap, data.skills.length > 0);
+    toggleSection(preview.languagesWrap, data.languages.length > 0);
+    toggleSection(preview.coursesWrap, data.courses.length > 0);
+    updateSectionStates();
+  }
+
+  function clearValidation() {
+    personalError.textContent = "";
+    form.querySelectorAll(".invalid").forEach(function (field) {
+      field.classList.remove("invalid");
+    });
+    updateSectionStates();
+  }
+
+  function validateMainFields() {
+    const nameField = document.querySelector("#nome");
+    const emailField = document.querySelector("#email");
+    const messages = [];
+
+    clearValidation();
+
+    if (!nameField.value.trim()) {
+      nameField.classList.add("invalid");
+      messages.push("Informe seu nome.");
+    }
+
+    if (!validateEmail(emailField.value.trim())) {
+      emailField.classList.add("invalid");
+      messages.push("Informe um e-mail valido.");
+    }
+
+    personalError.textContent = messages.join(" ");
+    updateSectionStates();
+    return messages.length === 0;
+  }
+
+  function resetDynamicSections() {
+    clearElement(experienceList);
+    clearElement(educationList);
+    experienceList.appendChild(createExperienceItem());
+    educationList.appendChild(createEducationItem());
+  }
+
+  addExperienceButton.addEventListener("click", function () {
+    experienceList.appendChild(createExperienceItem());
+    openSectionByKey("experience");
+    renderPreview();
+  });
+
+  addEducationButton.addEventListener("click", function () {
+    educationList.appendChild(createEducationItem());
+    openSectionByKey("education");
+    renderPreview();
+  });
+
+  if (expandAllButton) {
+    expandAllButton.addEventListener("click", function () {
+      formSections.forEach(function (section) {
+        setSectionOpen(section, true);
+      });
+    });
+  }
+
+  if (collapseAllButton) {
+    collapseAllButton.addEventListener("click", function () {
+      formSections.forEach(function (section) {
+        setSectionOpen(section, false);
+      });
+    });
+  }
+
+  form.addEventListener("click", function (event) {
+    const target = event.target;
+
+    if (!target.matches("[data-remove-item]")) {
+      return;
+    }
+
+    const item = target.closest(".dynamic-item");
+    if (!item) {
+      return;
+    }
+
+    item.remove();
+    renderPreview();
+  });
+
+  form.addEventListener("input", function (event) {
+    renderPreview();
+
+    if (event.target.id === "nome" || event.target.id === "email") {
+      if (personalError.textContent.trim() || event.target.classList.contains("invalid")) {
+        validateMainFields();
+      }
+    }
+  });
+
+  form.addEventListener("change", renderPreview);
+
+  printButton.addEventListener("click", function () {
+    if (!validateMainFields()) {
+      const firstInvalidField = form.querySelector(".invalid");
+      openSectionForElement(firstInvalidField);
+
+      if (firstInvalidField) {
+        firstInvalidField.focus();
+      }
+      return;
+    }
+
     window.print();
   });
 
-  $btnClear.addEventListener("click", function () {
-    if (!window.confirm("Tem certeza que deseja limpar todos os campos?")) return;
-    $form.reset();
-    $expList.innerHTML = "";
-    $formList.innerHTML = "";
+  clearButton.addEventListener("click", function () {
+    if (!window.confirm("Tem certeza que deseja limpar todos os campos?")) {
+      return;
+    }
+
+    form.reset();
+    clearValidation();
+    resetDynamicSections();
+    formSections.forEach(function (section) {
+      setSectionOpen(section, section.dataset.sectionKey === "personal");
+    });
     renderPreview();
   });
 
-  /* Inicialização: adiciona um item de cada para o usuário começar */
-  $expList.appendChild(makeExperienciaItem());
-  $formList.appendChild(makeFormacaoItem());
+  resetDynamicSections();
   renderPreview();
 })();

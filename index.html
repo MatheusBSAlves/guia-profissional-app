@@ -3,109 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Plataforma de auxílio à carreira: questionário de perfil de entrevista e gerador de currículo em tempo real." />
-  <title>Guia da Profissionalização</title>
+  <meta name="description" content="Plataforma de apoio a carreira com questionario interativo para entrevistas e gerador de curriculo em tempo real." />
+  <title>Guia da Profissionalizacao</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<body class="page-home">
+  <a class="skip-link" href="#conteudo">Pular para o conteudo</a>
 
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="index.html">
-        <svg class="brand-logo" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id="lg-brand-home" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#1f4ed8"/>
-              <stop offset="1" stop-color="#0ea5e9"/>
-            </linearGradient>
-          </defs>
-          <rect x="2" y="2" width="36" height="36" rx="10" fill="url(#lg-brand-home)"/>
-          <path d="M11 27 L17 19 L22 23 L29 13" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="29" cy="13" r="2.6" fill="#fff"/>
-        </svg>
-        <span class="brand-text">Guia da Profissionalização</span>
+      <a class="brand" href="index.html" aria-label="Ir para a pagina inicial">
+        <img class="brand-logo" src="assets/logo-brand.svg" alt="" width="72" height="72" />
+        <span class="brand-copy">
+          <span class="brand-title">Guia da Profissionalizacao</span>
+          <span class="brand-subtitle">Carreira, entrevista e curriculo</span>
+        </span>
       </a>
-      <nav class="site-nav" aria-label="Navegação principal">
+
+      <nav class="site-nav" id="siteNav" aria-label="Navegacao principal">
         <ul>
-          <li><a href="index.html" class="active">Início</a></li>
-          <li><a href="questionario.html">Questionário</a></li>
-          <li><a href="curriculo.html">Currículo</a></li>
+          <li><a href="index.html" class="active">Inicio</a></li>
+          <li><a href="questionario.html">Questionario</a></li>
+          <li><a href="curriculo.html">Curriculo</a></li>
           <li><a href="sobre.html">Sobre</a></li>
         </ul>
       </nav>
+
       <div class="header-actions">
         <button type="button" class="theme-toggle" id="themeToggle" aria-label="Mudar para modo escuro" aria-pressed="false">
-          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
           <span class="theme-label">Escuro</span>
         </button>
         <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="siteNav">
-          <span></span><span></span><span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
     </div>
   </header>
 
   <main id="conteudo">
-    <section class="hero">
+    <section class="hero hero-home">
       <div class="container hero-inner">
         <div class="hero-content">
-          <p class="eyebrow">Projeto de extensão acadêmico</p>
-          <h1>Prepare-se para a entrevista e crie seu currículo em minutos.</h1>
+          <p class="eyebrow">Projeto academico de extensao</p>
+          <h1>Uma plataforma simples para treinar entrevistas e montar um curriculo profissional.</h1>
           <p class="lead">
-            Um questionário interativo descobre seu perfil de candidato e oferece dicas personalizadas.
-            Em seguida, monte seu currículo profissional com pré-visualização em tempo real e imprima direto do navegador.
+            O nosso projeto ajuda candidatos da comunidade em duas etapas importantes do processo seletivo:
+            diagnostico de preparo para entrevistas e criacao de curriculo com visualizacao em tempo real.
           </p>
+
           <div class="hero-actions">
-            <a href="questionario.html" class="btn btn-primary">Fazer o questionário</a>
-            <a href="curriculo.html" class="btn btn-secondary">Criar meu currículo</a>
+            <a href="questionario.html" class="btn btn-primary">Fazer o questionario</a>
+            <a href="curriculo.html" class="btn btn-secondary">Criar meu curriculo</a>
           </div>
-        </div>
-        <aside class="hero-card" aria-label="Resumo das funcionalidades">
-          <ul class="feature-list">
-            <li><strong>10 perguntas</strong> que classificam seu perfil</li>
-            <li><strong>Dicas personalizadas</strong> para a entrevista</li>
-            <li><strong>Currículo ao vivo</strong> enquanto você digita</li>
-            <li><strong>Impressão / PDF</strong> direto do navegador</li>
+
+          <ul class="hero-points">
+            <li>Feedback imediato sobre o nivel de preparacao para entrevistas.</li>
+            <li>Curriculo atualizado ao vivo enquanto o usuario preenche os campos.</li>
+            <li>Interface responsiva, acessivel e pronta para impressao em PDF.</li>
           </ul>
+        </div>
+
+        <aside class="surface-card hero-card" aria-label="Resumo do projeto">
+          <p class="card-kicker">Impacto social</p>
+          <h2>Mais confianca para quem esta buscando a primeira oportunidade ou recolocacao.</h2>
+          <p>
+            O foco do projeto e democratizar o acesso a orientacoes praticas de carreira sem depender
+            de softwares pagos, cadastro complexo ou conhecimento tecnico avancado.
+          </p>
+
+          <div class="hero-stats">
+            <article>
+              <strong>Questionario</strong>
+              <span>Diagnostico de preparo com dicas personalizadas.</span>
+            </article>
+            <article>
+              <strong>Curriculo</strong>
+              <span>Formulario claro com visualizacao profissional.</span>
+            </article>
+            <article>
+              <strong>Impressao</strong>
+              <span>Saida limpa para PDF ou impressao direta do navegador.</span>
+            </article>
+          </div>
         </aside>
       </div>
     </section>
 
-    <section class="features container deco-dots">
-      <h2>Como funciona</h2>
-      <div class="features-grid">
-        <article class="feature">
-          <div class="feature-icon" aria-hidden="true">
-            <img src="assets/icons/icon-questionario.svg" alt="" />
-          </div>
-          <h3>Descubra seu perfil</h3>
-          <p>Responda 10 perguntas rápidas e receba uma classificação entre quatro perfis profissionais.</p>
+    <section class="section section-features">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Funcionalidades principais</p>
+          <h2>O conteudo e o fluxo foram pensados para serem claros, objetivos e faceis de defender em banca.</h2>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature surface-card">
+            <div class="feature-icon" aria-hidden="true">
+              <img src="assets/icons/icon-questionario.svg" alt="" />
+            </div>
+            <h3>Questionario interativo</h3>
+            <p>Dez perguntas orientadas para preparacao de entrevistas, com validacao local e classificacao final.</p>
+          </article>
+
+          <article class="feature surface-card">
+            <div class="feature-icon" aria-hidden="true">
+              <img src="assets/icons/icon-dicas.svg" alt="" />
+            </div>
+            <h3>Dicas personalizadas</h3>
+            <p>O resultado apresenta orientacoes praticas sobre estudo, postura, organizacao e comunicacao.</p>
+          </article>
+
+          <article class="feature surface-card">
+            <div class="feature-icon" aria-hidden="true">
+              <img src="assets/icons/icon-curriculo.svg" alt="" />
+            </div>
+            <h3>Curriculo em tempo real</h3>
+            <p>O usuario preenche o formulario e acompanha o preview profissional pronto para impressao.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-process">
+      <div class="container split-grid">
+        <article class="surface-card">
+          <p class="card-kicker">Como funciona</p>
+          <h2>Um fluxo em tres etapas, sem excesso de telas.</h2>
+          <ol class="steps-list">
+            <li>Responder ao questionario para entender o nivel de preparo para entrevistas.</li>
+            <li>Ler as dicas personalizadas e ajustar pontos importantes da apresentacao pessoal.</li>
+            <li>Montar o curriculo e salvar em PDF com layout limpo e legivel.</li>
+          </ol>
         </article>
-        <article class="feature">
-          <div class="feature-icon" aria-hidden="true">
-            <img src="assets/icons/icon-dicas.svg" alt="" />
-          </div>
-          <h3>Receba dicas certeiras</h3>
-          <p>Cada perfil vem com orientações específicas de postura, fala e preparação para a entrevista.</p>
-        </article>
-        <article class="feature">
-          <div class="feature-icon" aria-hidden="true">
-            <img src="assets/icons/icon-curriculo.svg" alt="" />
-          </div>
-          <h3>Monte seu currículo</h3>
-          <p>Preencha o formulário e veja seu currículo sendo construído em tempo real, pronto para imprimir.</p>
+
+        <article class="surface-card emphasis-card">
+          <p class="card-kicker">Extensao e comunidade</p>
+          <h2>O projeto conecta aprendizado tecnico com uma necessidade real de empregabilidade.</h2>
+          <p>
+            Alem de aplicar HTML semantico, CSS puro e JavaScript Vanilla, a proposta entrega uma ferramenta
+            util para pessoas que precisam de orientacao clara para participar de processos seletivos.
+          </p>
+          <a href="sobre.html" class="text-link">Conhecer o contexto do projeto</a>
         </article>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>&copy; <span id="ano"></span> Guia da Profissionalização — Projeto de extensão.</p>
-      <p class="muted">Feito com HTML5, CSS3 e JavaScript puro.</p>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="footer-title">Guia da Profissionalizacao</p>
+      </div>
+      <div class="footer-meta">
+        <p>Faminas - Analise e Desenvolvimento de Sistemas</p>
+        <p>Projeto de Extensao - Front-end 1</p>
+        <p>&copy; <span id="ano"></span></p>
+      </div>
     </div>
   </footer>
 
